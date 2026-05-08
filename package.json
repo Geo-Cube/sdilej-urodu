@@ -1,0 +1,5 @@
+{
+  "name": "@sdilej-urodu/monorepo",
+  "private": true,
+  "workspaces": ["backend", "shared"]
+}

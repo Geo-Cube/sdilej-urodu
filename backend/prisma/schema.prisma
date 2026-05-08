@@ -1,0 +1,68 @@
+datasource db {
+    provider = "sqlite"
+}
+
+generator client {
+    provider = "prisma-client"
+    output = "../src/generated"
+}
+
+model Offer{
+    id                      Int         @id @default(autoincrement())
+    cropName                String
+    description             String?
+    availableQuantity       Float
+    stepQuantity            Float
+    maxQuantity             Float?
+    price                   Float
+    isFree                  Boolean     @default(false)
+    unit                    Unit
+    farmerName              String
+    email                   String
+    phone                   String
+    street                  String
+    city                    String
+    zipCode                 String
+    photoUrl                String?
+    status                  OfferStatus @default(ACTIVE)
+    pickupMethod            PickupMethod
+    pickupInstructions      String
+    reservations            Reservation[] 
+}
+
+model Reservation {
+    id                      Int         @id @default(autoincrement())
+    offer                   Offer       @relation(fields: [offerId], references: [id])
+    offerId                 Int
+    reserverName            String
+    reserverEmail           String
+    reserverPhone           String
+    reservedQuantity        Float
+    selectedPickupMethod    ReservationPickupMethod
+    createdAt               DateTime    @default(now())
+}
+
+// ENUMY (V SQLite se uloží jako String, ale Prisma Client je otypuje)
+enum Unit {
+  G
+  KG
+  KS
+}
+
+enum OfferStatus {
+  ACTIVE
+  INACTIVE
+  SOLD_OUT
+}
+
+enum PickupMethod {
+  PERSONAL
+  NON_CONTACT
+  BOTH
+}
+
+// Rezervující si vybírá pouze konkrétní způsob — BOTH je výhradně pro farmáře
+enum ReservationPickupMethod {
+  PERSONAL
+  NON_CONTACT
+}
