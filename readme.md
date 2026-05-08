@@ -10,34 +10,6 @@ Farmáři a zahrádkáři mohou vytvářet **nabídky** (plodina, množství, ce
 
 ---
 
-## Co projekt obsahuje
-
-```
-sdilej-urodu/
-├── backend/                  # Fastify REST API
-│   ├── prisma/
-│   │   ├── schema.prisma     # Datový model (Offer, Reservation, enumy)
-│   │   ├── seed.ts           # Testovací data
-│   │   ├── dev.db            # SQLite databáze pro vývoj
-│   │   └── test.db           # SQLite databáze pro testy
-│   ├── src/
-│   │   ├── app.ts            # Sestavení Fastify instance (Zod, Swagger, CORS)
-│   │   ├── server.ts         # Spuštění serveru
-│   │   ├── lib/
-│   │   │   ├── prisma.ts     # Prisma klient (libSQL adapter)
-│   │   │   └── errors.ts     # HttpError helper
-│   │   └── modules/
-│   │       ├── offers/       # GET /api/offers, GET /api/offers/:id, POST /api/offers
-│   │       └── reservations/ # POST /api/reservations
-│   └── test/
-│       └── api.test.ts       # Integrační testy (26 testů, Vitest)
-└── shared/                   # Sdílené Zod schémata (validace + typy)
-    └── src/
-        ├── offers.schema.ts
-        ├── reservations.schema.ts
-        ├── enums.schema.ts
-        └── index.ts
-```
 
 ### API endpointy
 
@@ -121,4 +93,4 @@ Jde o školní projekt. Aby zkoušející mohl projekt rovnou spustit bez nutnos
 
 ---
 
-*Vytvořil: Já*
+Vytvořil: Jakub Georgiev
