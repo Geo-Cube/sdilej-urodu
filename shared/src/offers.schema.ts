@@ -14,7 +14,7 @@ export const OfferSchema = z.object({
   unit: UnitSchema,
   farmerName: z.string(),
   email: z.email(),
-  phone: z.string(),
+  phone: z.string().nullable(),
   street: z.string(),
   city: z.string(),
   zipCode: z.string(),
@@ -45,7 +45,7 @@ export const CreateOfferSchema = z.object({
   unit: UnitSchema,
   farmerName: z.string().min(1),
   email: z.email(),
-  phone: phoneSchema,
+  phone: phoneSchema.optional().nullable(),
   street: z.string().min(1),
   city: z.string().min(1),
   zipCode: z.string().min(1),
@@ -56,6 +56,22 @@ export const CreateOfferSchema = z.object({
   .refine(
     (val) => (val.isFree ?? false) || val.price > 0,
     { message: 'Cena musí být kladná', path: ['price'] },
+  )
+  .refine(
+    (val) => val.stepQuantity <= val.availableQuantity,
+    { message: 'Krok musí být menší nebo roven dostupnému množství', path: ['stepQuantity'] },
+  )
+  .refine(
+    (val) => val.maxQuantity == null || val.maxQuantity <= val.availableQuantity,
+    { message: 'Maximální množství na rezervaci nesmí překročit dostupné množství', path: ['maxQuantity'] },
+  )
+  .refine(
+    (val) => Math.round((val.availableQuantity % val.stepQuantity) * 1e10) / 1e10 === 0,
+    { message: 'Dostupné množství musí být dělitelné krokem', path: ['availableQuantity'] },
+  )
+  .refine(
+    (val) => val.maxQuantity == null || Math.round((val.maxQuantity % val.stepQuantity) * 1e10) / 1e10 === 0,
+    { message: 'Maximální množství musí být dělitelné krokem', path: ['maxQuantity'] },
   )
   .transform((val) => ({
     ...val,

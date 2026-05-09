@@ -19,7 +19,7 @@ model Offer{
     unit                    Unit
     farmerName              String
     email                   String
-    phone                   String
+    phone                   String?
     street                  String
     city                    String
     zipCode                 String
