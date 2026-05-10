@@ -291,7 +291,7 @@ export type OfferGroupByOutputType = {
   unit: $Enums.Unit
   farmerName: string
   email: string
-  phone: string
+  phone: string | null
   street: string
   city: string
   zipCode: string
@@ -336,7 +336,7 @@ export type OfferWhereInput = {
   unit?: Prisma.EnumUnitFilter<"Offer"> | $Enums.Unit
   farmerName?: Prisma.StringFilter<"Offer"> | string
   email?: Prisma.StringFilter<"Offer"> | string
-  phone?: Prisma.StringFilter<"Offer"> | string
+  phone?: Prisma.StringNullableFilter<"Offer"> | string | null
   street?: Prisma.StringFilter<"Offer"> | string
   city?: Prisma.StringFilter<"Offer"> | string
   zipCode?: Prisma.StringFilter<"Offer"> | string
@@ -359,7 +359,7 @@ export type OfferOrderByWithRelationInput = {
   unit?: Prisma.SortOrder
   farmerName?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  phone?: Prisma.SortOrder
+  phone?: Prisma.SortOrderInput | Prisma.SortOrder
   street?: Prisma.SortOrder
   city?: Prisma.SortOrder
   zipCode?: Prisma.SortOrder
@@ -385,7 +385,7 @@ export type OfferWhereUniqueInput = Prisma.AtLeast<{
   unit?: Prisma.EnumUnitFilter<"Offer"> | $Enums.Unit
   farmerName?: Prisma.StringFilter<"Offer"> | string
   email?: Prisma.StringFilter<"Offer"> | string
-  phone?: Prisma.StringFilter<"Offer"> | string
+  phone?: Prisma.StringNullableFilter<"Offer"> | string | null
   street?: Prisma.StringFilter<"Offer"> | string
   city?: Prisma.StringFilter<"Offer"> | string
   zipCode?: Prisma.StringFilter<"Offer"> | string
@@ -408,7 +408,7 @@ export type OfferOrderByWithAggregationInput = {
   unit?: Prisma.SortOrder
   farmerName?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  phone?: Prisma.SortOrder
+  phone?: Prisma.SortOrderInput | Prisma.SortOrder
   street?: Prisma.SortOrder
   city?: Prisma.SortOrder
   zipCode?: Prisma.SortOrder
@@ -438,7 +438,7 @@ export type OfferScalarWhereWithAggregatesInput = {
   unit?: Prisma.EnumUnitWithAggregatesFilter<"Offer"> | $Enums.Unit
   farmerName?: Prisma.StringWithAggregatesFilter<"Offer"> | string
   email?: Prisma.StringWithAggregatesFilter<"Offer"> | string
-  phone?: Prisma.StringWithAggregatesFilter<"Offer"> | string
+  phone?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
   street?: Prisma.StringWithAggregatesFilter<"Offer"> | string
   city?: Prisma.StringWithAggregatesFilter<"Offer"> | string
   zipCode?: Prisma.StringWithAggregatesFilter<"Offer"> | string
@@ -459,7 +459,7 @@ export type OfferCreateInput = {
   unit: $Enums.Unit
   farmerName: string
   email: string
-  phone: string
+  phone?: string | null
   street: string
   city: string
   zipCode: string
@@ -482,7 +482,7 @@ export type OfferUncheckedCreateInput = {
   unit: $Enums.Unit
   farmerName: string
   email: string
-  phone: string
+  phone?: string | null
   street: string
   city: string
   zipCode: string
@@ -504,7 +504,7 @@ export type OfferUpdateInput = {
   unit?: Prisma.EnumUnitFieldUpdateOperationsInput | $Enums.Unit
   farmerName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   street?: Prisma.StringFieldUpdateOperationsInput | string
   city?: Prisma.StringFieldUpdateOperationsInput | string
   zipCode?: Prisma.StringFieldUpdateOperationsInput | string
@@ -527,7 +527,7 @@ export type OfferUncheckedUpdateInput = {
   unit?: Prisma.EnumUnitFieldUpdateOperationsInput | $Enums.Unit
   farmerName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   street?: Prisma.StringFieldUpdateOperationsInput | string
   city?: Prisma.StringFieldUpdateOperationsInput | string
   zipCode?: Prisma.StringFieldUpdateOperationsInput | string
@@ -550,7 +550,7 @@ export type OfferCreateManyInput = {
   unit: $Enums.Unit
   farmerName: string
   email: string
-  phone: string
+  phone?: string | null
   street: string
   city: string
   zipCode: string
@@ -571,7 +571,7 @@ export type OfferUpdateManyMutationInput = {
   unit?: Prisma.EnumUnitFieldUpdateOperationsInput | $Enums.Unit
   farmerName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   street?: Prisma.StringFieldUpdateOperationsInput | string
   city?: Prisma.StringFieldUpdateOperationsInput | string
   zipCode?: Prisma.StringFieldUpdateOperationsInput | string
@@ -593,7 +593,7 @@ export type OfferUncheckedUpdateManyInput = {
   unit?: Prisma.EnumUnitFieldUpdateOperationsInput | $Enums.Unit
   farmerName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   street?: Prisma.StringFieldUpdateOperationsInput | string
   city?: Prisma.StringFieldUpdateOperationsInput | string
   zipCode?: Prisma.StringFieldUpdateOperationsInput | string
@@ -763,7 +763,7 @@ export type OfferCreateWithoutReservationsInput = {
   unit: $Enums.Unit
   farmerName: string
   email: string
-  phone: string
+  phone?: string | null
   street: string
   city: string
   zipCode: string
@@ -785,7 +785,7 @@ export type OfferUncheckedCreateWithoutReservationsInput = {
   unit: $Enums.Unit
   farmerName: string
   email: string
-  phone: string
+  phone?: string | null
   street: string
   city: string
   zipCode: string
@@ -822,7 +822,7 @@ export type OfferUpdateWithoutReservationsInput = {
   unit?: Prisma.EnumUnitFieldUpdateOperationsInput | $Enums.Unit
   farmerName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   street?: Prisma.StringFieldUpdateOperationsInput | string
   city?: Prisma.StringFieldUpdateOperationsInput | string
   zipCode?: Prisma.StringFieldUpdateOperationsInput | string
@@ -844,7 +844,7 @@ export type OfferUncheckedUpdateWithoutReservationsInput = {
   unit?: Prisma.EnumUnitFieldUpdateOperationsInput | $Enums.Unit
   farmerName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   street?: Prisma.StringFieldUpdateOperationsInput | string
   city?: Prisma.StringFieldUpdateOperationsInput | string
   zipCode?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1000,7 +1000,7 @@ export type $OfferPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     unit: $Enums.Unit
     farmerName: string
     email: string
-    phone: string
+    phone: string | null
     street: string
     city: string
     zipCode: string

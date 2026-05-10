@@ -20,9 +20,9 @@ export async function getOffers() {
  * @returns Nově vytvořená nabídka
  */
 export async function createOffer(data: CreateOffer) {
-  const { description = null, maxQuantity = null, photoUrl = null, ...rest } = data
+  const { description = null, maxQuantity = null, photoUrl = null, phone = null, ...rest } = data
   return prisma.offer.create({
-    data: { ...rest, description, maxQuantity, photoUrl },
+    data: { ...rest, description, maxQuantity, photoUrl, phone },
   })
 }
 
