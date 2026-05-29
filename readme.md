@@ -99,7 +99,7 @@ npm run build --workspace frontend
 
 ## Lighthouse
 
-Lighthouse má smysl pouštět proti produkčnímu preview, ne proti Vite dev serveru. Dev server obsahuje HMR, WebSocket, React Refresh a development buildy knihoven, takže výsledky umí být zavádějící.
+Pokud používáte Lighthouse, má smysl pouštět proti produkčnímu preview, ne proti Vite dev serveru. Dev server obsahuje HMR, WebSocket, React Refresh a development buildy knihoven, takže výsledky umí být zavádějící.
 
 Postup:
 
@@ -149,5 +149,6 @@ Shared:
 
 - `.db` soubory jsou v repozitáři záměrně, aby šel projekt rychle spustit a otestovat.
 - Lokální generované výstupy jako `dist/`, logy, browser profily z kontrol a `node_modules/` jsou ignorované přes `.gitignore`.
+- Upozornění: Veškeré údaje jsou smyšlené pro akademické účely a neodpovídají reálným datům.
 
 Vytvořil: Jakub Georgiev

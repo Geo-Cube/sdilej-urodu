@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom'
-import { useEffect, useRef, useState } from 'react'
-import { AlertCircle, CheckCircle2, MapPin, Phone, Mail, User, FileText, Box } from 'lucide-react'
+import { useState } from 'react'
+import { MapPin, Phone, Mail, User, FileText, Box } from 'lucide-react'
 import { useOffer } from '@/hooks/useOffer'
 import { useCreateReservation } from '@/hooks/useCreateReservation'
 import { ReservationForm } from '@/features/reservations/ReservationForm'
@@ -9,16 +9,11 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { OfferImage } from '@/components/OfferImage'
 import { PageError, PageSpinner } from '@/components/PageState'
+import { toast } from '@/hooks/use-toast'
 import { pickupLabel } from '@/lib/labels'
 import { formatPrice, formatQuantity } from '@/lib/format'
 import axios from 'axios'
 import type { CreateReservation } from '@sdilej-urodu/shared'
-
-type ReservationPopup = {
-  variant: 'success' | 'error'
-  title: string
-  description: string
-}
 
 function getReservationErrorMessage(error: unknown) {
   if (!axios.isAxiosError<{ message?: string }>(error)) {
@@ -44,28 +39,6 @@ export function OfferDetailPage() {
   const { data: offer, isPending, isError } = useOffer(offerId)
   const { mutate, isPending: isReserving } = useCreateReservation(offerId)
   const [dialogOpen, setDialogOpen] = useState(false)
-  const [reservationPopup, setReservationPopup] = useState<ReservationPopup | null>(null)
-  const popupTimeoutRef = useRef<number | null>(null)
-
-  function showReservationPopup(popup: ReservationPopup) {
-    if (popupTimeoutRef.current) {
-      window.clearTimeout(popupTimeoutRef.current)
-    }
-
-    setReservationPopup(popup)
-    popupTimeoutRef.current = window.setTimeout(() => {
-      setReservationPopup(null)
-      popupTimeoutRef.current = null
-    }, 3200)
-  }
-
-  useEffect(() => {
-    return () => {
-      if (popupTimeoutRef.current) {
-        window.clearTimeout(popupTimeoutRef.current)
-      }
-    }
-  }, [])
 
   if (!hasValidOfferId) {
     return <PageError message="Nabídka nebyla nalezena." />
@@ -85,17 +58,17 @@ export function OfferDetailPage() {
       {
         onSuccess: () => {
           setDialogOpen(false)
-          showReservationPopup({
-            variant: 'success',
+          toast({
             title: 'Rezervace proběhla úspěšně',
             description: 'Brzy se domluvíte na vyzvednutí.',
+            variant: 'success',
           })
         },
         onError: (error) => {
-          showReservationPopup({
-            variant: 'error',
+          toast({
             title: 'Rezervaci se nepodařilo vytvořit',
             description: getReservationErrorMessage(error),
+            variant: 'destructive',
           })
         },
       },
@@ -106,28 +79,6 @@ export function OfferDetailPage() {
 
   return (
     <div className="w-full min-w-0 space-y-4">
-      {reservationPopup && (
-        <div className="reservation-success-popup fixed left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] max-w-sm">
-          <div
-            role="status"
-            aria-live="polite"
-            className={`rounded-xl border bg-white px-6 py-7 text-center shadow-xl ${reservationPopup.variant === 'success' ? 'border-green-200 text-green-900' : 'border-red-200 text-red-900'}`}
-          >
-            <div className={`mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full ${reservationPopup.variant === 'success' ? 'bg-green-100' : 'bg-red-100'}`}>
-              {reservationPopup.variant === 'success' ? (
-                <CheckCircle2 className="h-9 w-9 text-green-700" />
-              ) : (
-                <AlertCircle className="h-9 w-9 text-red-700" />
-              )}
-            </div>
-            <p className="text-lg font-semibold">{reservationPopup.title}</p>
-            <p className={`mt-1 text-sm ${reservationPopup.variant === 'success' ? 'text-green-700' : 'text-red-700'}`}>
-              {reservationPopup.description}
-            </p>
-          </div>
-        </div>
-      )}
-
       <div className="grid min-w-0 grid-cols-1 gap-8 rounded-xl border border-gray-200 bg-white p-6 md:grid-cols-2">
         <div className="rounded-lg overflow-hidden bg-gray-100 aspect-4/3">
           <OfferImage photoUrl={offer.photoUrl} alt={offer.cropName} iconClassName="h-16 w-16" />

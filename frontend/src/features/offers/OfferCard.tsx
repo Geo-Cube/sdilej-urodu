@@ -9,14 +9,16 @@ type Offer = GetOffersResponse[number]
 
 export function OfferCard({ offer }: { offer: Offer }) {
   return (
-    <div className="group relative flex min-w-0 flex-col overflow-hidden rounded-xl border border-gray-200 bg-white transition-shadow hover:shadow-md">
+    <div className="group relative flex min-w-0 flex-col overflow-hidden rounded-xl border border-gray-200 bg-white transition-all duration-300 ease-out hover:-translate-y-1 hover:border-green-300 hover:shadow-lg hover:shadow-green-900/10">
       <Link
         to={`/offers/${offer.id}`}
         aria-label={`Zobrazit detail nabídky ${offer.cropName}`}
         className="absolute inset-0 z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
       />
       <div className="aspect-4/3 bg-gray-100 overflow-hidden">
-        <OfferImage photoUrl={offer.photoUrl} alt={offer.cropName} />
+        <div className="h-full w-full transition-transform duration-500 ease-out group-hover:scale-105">
+          <OfferImage photoUrl={offer.photoUrl} alt={offer.cropName} />
+        </div>
       </div>
 
       <div className="p-4 flex flex-col flex-1 gap-2">
@@ -37,7 +39,12 @@ export function OfferCard({ offer }: { offer: Offer }) {
           </span>
         </div>
 
-        <Button asChild variant="outline" size="sm" className="relative z-20 w-full mt-2">
+        <Button
+          asChild
+          variant="outline"
+          size="sm"
+          className="relative z-20 mt-2 w-full transition-colors duration-200 hover:border-green-700 hover:bg-green-700 hover:text-white"
+        >
           <Link to={`/offers/${offer.id}`}>Zobrazit detail</Link>
         </Button>
       </div>

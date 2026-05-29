@@ -140,7 +140,7 @@ export function ReservationForm({ offer, onSubmit, isPending }: Props) {
             <FormItem>
               <FormLabel className={labelClassName}>Způsob vyzvednutí</FormLabel>
               <FormControl>
-                <div className="flex h-11 items-center rounded-md border border-gray-200 bg-gray-50 px-3 text-sm text-gray-700">
+                <div className="flex h-11 items-center rounded-md border border-green-700 bg-green-50 px-3 text-sm text-green-900">
                   {pickupLabel[defaultPickup]}
                 </div>
               </FormControl>

@@ -12,7 +12,7 @@ export function CreateOfferPage() {
   function onSubmit(data: CreateOffer) {
     mutate(data, {
       onSuccess: (offer) => {
-        toast({ title: 'Nabídka vytvořena', description: `${offer.cropName} byla úspěšně přidána.` })
+        toast({ title: 'Nabídka byla úspěšně vytvořena', description: `${offer.cropName} je nyní viditelná pro ostatní.`, variant: 'success' })
         navigate(`/offers/${offer.id}`)
       },
       onError: () => {
