@@ -9,15 +9,15 @@ export const ReservationSchema = z.object({
   reserverPhone: z.string(),
   reservedQuantity: z.number(),
   selectedPickupMethod: ReservationPickupMethodSchema,
-  createdAt: z.date(),
+  createdAt: z.coerce.date(),
 })
 
 export const CreateReservationSchema = z.object({
-  offerId: z.number().int().positive(),
-  reserverName: z.string().min(1),
-  reserverEmail: z.email(),
+  offerId: z.number({ error: 'Neplatná nabídka' }).int('Neplatná nabídka').positive('Neplatná nabídka'),
+  reserverName: z.string({ error: 'Zadejte jméno' }).min(1, 'Zadejte jméno'),
+  reserverEmail: z.email({ error: 'Zadejte platný email' }),
   reserverPhone: phoneSchema,
-  reservedQuantity: z.number().positive(),
+  reservedQuantity: z.number({ error: 'Zadejte množství' }).positive('Množství musí být větší než 0'),
   selectedPickupMethod: ReservationPickupMethodSchema,
 })
 

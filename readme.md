@@ -1,96 +1,153 @@
-# Sdílej úrodu — REST API
+# Sdílej úrodu
 
-Školní projekt. Backend REST API pro platformu, která umožňuje pěstitelům sdílet přebytky ze zahrady a ostatním si je zarezervovat.
+Školní full-stack aplikace pro sdílení přebytků úrody. Pěstitel vytvoří nabídku, zájemce si zarezervuje konkrétní množství a po vyčerpání zásob se nabídka automaticky označí jako vyprodaná.
 
----
+## Co aplikace umí
 
-## K čemu projekt slouží
+- vytváření nabídek úrody včetně množství, ceny, kontaktu a způsobu vyzvednutí
+- validace celkového množství, kroku balení a limitu na osobu
+- seznam aktivních nabídek a detail nabídky
+- rezervace dostupného množství
+- automatické přepnutí nabídky na `SOLD_OUT`
+- Swagger dokumentace API na `/api/docs`
 
-Farmáři a zahrádkáři mohou vytvářet **nabídky** (plodina, množství, cena, místo a způsob vyzvednutí). Zájemci pak mohou na nabídku udělat **rezervaci** konkrétního množství. Pokud se vyčerpá dostupné množství, nabídka se automaticky označí jako `SOLD_OUT`.
+## Struktura projektu
 
----
+```text
+backend/   Fastify REST API, Prisma, SQLite
+frontend/  React aplikace ve Vite
+shared/    Sdílená Zod schemata a TypeScript typy
+```
 
-
-### API endpointy
-
-| Metoda | Endpoint | Popis |
-|--------|----------|-------|
-| `GET` | `/api/offers` | Seznam všech aktivních nabídek |
-| `GET` | `/api/offers/:id` | Detail nabídky včetně rezervací |
-| `POST` | `/api/offers` | Vytvoření nové nabídky |
-| `POST` | `/api/reservations` | Vytvoření rezervace |
-
-Interaktivní dokumentace (Swagger UI) je dostupná na **`/api/docs`** po spuštění serveru.
-
----
-
-## Spuštění
-
-### Požadavky
+## Požadavky
 
 - Node.js 20+
 - npm 10+
 
-### Instalace závislostí
+## Instalace
 
-Z **kořenové složky** projektu:
+Z kořenové složky projektu:
 
 ```bash
 npm install
 ```
 
-### Spuštění vývojového serveru
+Databázové soubory `backend/prisma/dev.db` a `backend/prisma/test.db` jsou součástí repozitáře, takže aplikace jde spustit bez další konfigurace.
+
+## Spuštění
+
+Backend i frontend se spouští najednou z kořene:
 
 ```bash
-cd backend
 npm run dev
 ```
 
-Server naslouchá na `http://localhost:3000`.
+Po spuštění:
 
----
+- frontend: `http://localhost:5173`
+- backend API: `http://localhost:3000/api`
+- Swagger UI: `http://localhost:3000/api/docs`
 
-## Databáze
-
-Projekt používá **SQLite** přes Prisma s libSQL adapterem. Databázový soubor `backend/prisma/dev.db` je součástí repozitáře — není třeba nic nastavovat.
-
-### Přegenerování databáze (volitelné)
-
-Pokud chcete databázi resetovat a znovu aplikovat schéma:
+## Užitečné příkazy
 
 ```bash
-cd backend
-npm run db:push
+# Backend testy
+npm test --workspace backend
+
+# Backend build / typecheck
+npm run build --workspace backend
+
+# Frontend lint
+npm run lint --workspace frontend
+
+# Frontend production build
+npm run build --workspace frontend
+
+# Frontend preview produkčního buildu
+npm run preview --workspace frontend
+
+# Aplikace databázového schématu
+npm run db:push --workspace backend
+
+# Naplnění databáze ukázkovými daty
+npm run db:seed --workspace backend
 ```
 
-### Seed — naplnění testovacími daty
+## API endpointy
+
+| Metoda | Endpoint | Popis |
+| --- | --- | --- |
+| `GET` | `/api/offers` | Seznam aktivních nabídek |
+| `GET` | `/api/offers/:id` | Detail nabídky včetně rezervací |
+| `POST` | `/api/offers` | Vytvoření nabídky |
+| `POST` | `/api/reservations` | Vytvoření rezervace |
+
+## Testování a kontrola kvality
+
+Backend integrační testy běží nad oddělenou SQLite databází:
 
 ```bash
-cd backend
-npm run db:seed
+npm test --workspace backend
 ```
 
-Seed vytvoří 4 nabídky (rajčata, cukety, jablka, bylinky) a 3 ukázkové rezervace.
-
----
-
-## Testy
-
-Testy běží proti oddělené databázi `backend/prisma/test.db` (také součástí repozitáře).
+Frontend ověřte minimálně přes lint a produkční build:
 
 ```bash
-cd backend
-npm test
+npm run lint --workspace frontend
+npm run build --workspace frontend
 ```
 
-Výstup ukáže výsledky všech 26 integračních testů pokrývajících oba moduly (offers, reservations).
+## Lighthouse
 
----
+Lighthouse má smysl pouštět proti produkčnímu preview, ne proti Vite dev serveru. Dev server obsahuje HMR, WebSocket, React Refresh a development buildy knihoven, takže výsledky umí být zavádějící.
 
-## Proč `.env` a `.db` nejsou v `.gitignore`
+Postup:
 
-Jde o školní projekt. Aby zkoušející mohl projekt rovnou spustit bez nutnosti vytvářet konfiguraci nebo inicializovat databázi, jsou tyto soubory záměrně součástí repozitáře. Databáze neobsahuje žádná citlivá ani osobní data.
+```bash
+npm run build --workspace frontend
+npm run preview --workspace frontend
+```
 
----
+Potom spusťte Lighthouse v prohlížeči proti preview URL, typicky:
+
+```text
+http://localhost:4173
+```
+
+## Použité knihovny
+
+Frontend:
+
+- React 19
+- React Router
+- TanStack Query
+- React Hook Form
+- Zod
+- Axios
+- Radix UI
+- Tailwind CSS
+- Lucide React
+- Vite
+
+Backend:
+
+- Fastify
+- fastify-type-provider-zod
+- Fastify Swagger / Swagger UI
+- Prisma
+- SQLite přes libSQL adapter
+- Zod
+- Vitest
+- tsx
+
+Shared:
+
+- Zod
+- sdílená validační schemata a typy pro frontend i backend
+
+## Poznámky
+
+- `.db` soubory jsou v repozitáři záměrně, aby šel projekt rychle spustit a otestovat.
+- Lokální generované výstupy jako `dist/`, logy, browser profily z kontrol a `node_modules/` jsou ignorované přes `.gitignore`.
 
 Vytvořil: Jakub Georgiev

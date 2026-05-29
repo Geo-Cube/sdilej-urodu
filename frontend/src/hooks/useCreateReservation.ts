@@ -5,7 +5,7 @@ export function useCreateReservation(offerId: number) {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: createReservation,
-    onSuccess: () => {
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['offers', offerId] })
       queryClient.invalidateQueries({ queryKey: ['offers'] })
     },

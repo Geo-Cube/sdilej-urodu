@@ -1,15 +1,16 @@
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { Loader2, Minus, Plus } from 'lucide-react'
 import { CreateReservationSchema } from '@sdilej-urodu/shared'
 import type { CreateReservation, GetOfferResponse } from '@sdilej-urodu/shared'
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Loader2, Minus, Plus } from 'lucide-react'
-import { z } from 'zod'
+import { pickupLabel, reservationPickupOptions } from '@/lib/labels'
+import { formatQuantity } from '@/lib/format'
 
-const unitLabel: Record<string, string> = { KG: 'kg', G: 'g', KS: 'ks' }
+const labelClassName = 'mb-2 block'
 
 type Props = {
   offer: GetOfferResponse
@@ -22,31 +23,29 @@ type FormData = z.infer<typeof FormSchema>
 
 export function ReservationForm({ offer, onSubmit, isPending }: Props) {
   const defaultPickup = offer.pickupMethod === 'BOTH' ? 'PERSONAL' : offer.pickupMethod
-  const [quantity, setQuantity] = useState(offer.stepQuantity)
 
   const form = useForm<FormData>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      selectedPickupMethod: defaultPickup as 'PERSONAL' | 'NON_CONTACT',
+      selectedPickupMethod: defaultPickup,
       reservedQuantity: offer.stepQuantity,
     },
   })
 
-  const max = offer.maxQuantity ?? offer.availableQuantity
+  const quantity = useWatch({ control: form.control, name: 'reservedQuantity' }) ?? offer.stepQuantity
+  const max = Math.min(offer.maxQuantity ?? offer.availableQuantity, offer.availableQuantity)
 
   function stepDown() {
     const next = Math.round((quantity - offer.stepQuantity) * 1e10) / 1e10
     if (next >= offer.stepQuantity) {
-      setQuantity(next)
-      form.setValue('reservedQuantity', next)
+      form.setValue('reservedQuantity', next, { shouldDirty: true, shouldValidate: true })
     }
   }
 
   function stepUp() {
     const next = Math.round((quantity + offer.stepQuantity) * 1e10) / 1e10
     if (next <= max) {
-      setQuantity(next)
-      form.setValue('reservedQuantity', next)
+      form.setValue('reservedQuantity', next, { shouldDirty: true, shouldValidate: true })
     }
   }
 
@@ -57,7 +56,7 @@ export function ReservationForm({ offer, onSubmit, isPending }: Props) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
         <FormField control={form.control} name="reserverName" render={({ field }) => (
           <FormItem>
-            <FormLabel>Jméno</FormLabel>
+            <FormLabel className={labelClassName}>Jméno</FormLabel>
             <FormControl><Input placeholder="Vaše jméno" {...field} /></FormControl>
             <FormMessage />
           </FormItem>
@@ -65,7 +64,7 @@ export function ReservationForm({ offer, onSubmit, isPending }: Props) {
 
         <FormField control={form.control} name="reserverEmail" render={({ field }) => (
           <FormItem>
-            <FormLabel>Email</FormLabel>
+            <FormLabel className={labelClassName}>Email</FormLabel>
             <FormControl><Input type="email" placeholder="vas@email.cz" {...field} /></FormControl>
             <FormMessage />
           </FormItem>
@@ -73,15 +72,15 @@ export function ReservationForm({ offer, onSubmit, isPending }: Props) {
 
         <FormField control={form.control} name="reserverPhone" render={({ field }) => (
           <FormItem>
-            <FormLabel>Telefon</FormLabel>
+            <FormLabel className={labelClassName}>Telefon</FormLabel>
             <FormControl><Input type="tel" placeholder="+420 777 123 456" {...field} /></FormControl>
             <FormMessage />
           </FormItem>
         )} />
 
-        <FormField control={form.control} name="reservedQuantity" render={({ field: _field }) => (
+        <FormField control={form.control} name="reservedQuantity" render={() => (
           <FormItem>
-            <FormLabel>Množství</FormLabel>
+            <FormLabel className={labelClassName}>Množství</FormLabel>
             <FormControl>
               <div className="flex items-center gap-3">
                 <button
@@ -93,7 +92,7 @@ export function ReservationForm({ offer, onSubmit, isPending }: Props) {
                   <Minus className="h-4 w-4" />
                 </button>
                 <div className="flex-1 text-center border border-gray-200 rounded-lg h-10 flex items-center justify-center font-medium">
-                  {quantity} {unitLabel[offer.unit]}
+                  {formatQuantity(quantity, offer.unit)}
                 </div>
                 <button
                   type="button"
@@ -105,29 +104,44 @@ export function ReservationForm({ offer, onSubmit, isPending }: Props) {
                 </button>
               </div>
             </FormControl>
-            <p className="text-xs text-gray-500">Krok: {offer.stepQuantity} {unitLabel[offer.unit]} | Max: {max} {unitLabel[offer.unit]}</p>
+            <p className="text-xs text-gray-500">Krok: {formatQuantity(offer.stepQuantity, offer.unit)} | Max: {formatQuantity(max, offer.unit)}</p>
             <FormMessage />
           </FormItem>
         )} />
 
-        {offer.pickupMethod === 'BOTH' && (
+        {offer.pickupMethod === 'BOTH' ? (
           <FormField control={form.control} name="selectedPickupMethod" render={({ field }) => (
             <FormItem>
-              <FormLabel>Způsob vyzvednutí</FormLabel>
+              <FormLabel className={labelClassName}>Způsob vyzvednutí</FormLabel>
               <FormControl>
                 <div className="space-y-2">
-                  {(['PERSONAL', 'NON_CONTACT'] as const).map((method) => (
-                    <label key={method} className="flex items-center gap-3 cursor-pointer">
+                  {reservationPickupOptions.map(([value, label]) => (
+                    <label
+                      key={value}
+                      className={`flex h-11 cursor-pointer items-center rounded-md border px-3 text-sm transition-colors ${field.value === value ? 'border-green-700 bg-green-50 text-green-900' : 'border-gray-200 bg-white text-gray-700 hover:border-green-700'}`}
+                    >
                       <input
                         type="radio"
-                        value={method}
-                        checked={field.value === method}
-                        onChange={() => field.onChange(method)}
-                        className="h-4 w-4 accent-green-700"
+                        value={value}
+                        checked={field.value === value}
+                        onChange={() => field.onChange(value)}
+                        className="sr-only"
                       />
-                      <span className="text-sm">{method === 'PERSONAL' ? 'Osobní předání' : 'Bezkontaktní stánek'}</span>
+                      <span>{label}</span>
                     </label>
                   ))}
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )} />
+        ) : (
+          <FormField control={form.control} name="selectedPickupMethod" render={() => (
+            <FormItem>
+              <FormLabel className={labelClassName}>Způsob vyzvednutí</FormLabel>
+              <FormControl>
+                <div className="flex h-11 items-center rounded-md border border-gray-200 bg-gray-50 px-3 text-sm text-gray-700">
+                  {pickupLabel[defaultPickup]}
                 </div>
               </FormControl>
               <FormMessage />

@@ -140,6 +140,39 @@ describe('POST /api/offers', () => {
     expect(body.description).toBe('Popis plodiny')
     expect(body.maxQuantity).toBe(5)
   })
+
+  it('vrátí 400 pokud je maxQuantity menší než stepQuantity', async () => {
+    const res = await app.inject({
+      method: 'POST',
+      url: '/api/offers',
+      body: { ...baseOffer, availableQuantity: 100, stepQuantity: 50, maxQuantity: 20 },
+    })
+
+    expect(res.statusCode).toBe(400)
+    expect(res.json().message).toContain('Maximální množství na osobu musí být alespoň jako krok balení')
+  })
+
+  it('vrátí 400 pokud maxQuantity není násobkem stepQuantity', async () => {
+    const res = await app.inject({
+      method: 'POST',
+      url: '/api/offers',
+      body: { ...baseOffer, availableQuantity: 100, stepQuantity: 10, maxQuantity: 25 },
+    })
+
+    expect(res.statusCode).toBe(400)
+    expect(res.json().message).toContain('Maximální množství na osobu musí být dělitelné krokem balení')
+  })
+
+  it('vrátí 400 pokud krok balení nedělí celkové množství', async () => {
+    const res = await app.inject({
+      method: 'POST',
+      url: '/api/offers',
+      body: { ...baseOffer, availableQuantity: 10, stepQuantity: 3 },
+    })
+
+    expect(res.statusCode).toBe(400)
+    expect(res.json().message).toContain('Celkové množství musí být dělitelné krokem balení')
+  })
 })
 
 // ─── GET /api/offers ───────────────────────────────────────────────────────────

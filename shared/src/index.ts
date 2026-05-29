@@ -12,8 +12,19 @@ export {
   GetOfferParamsSchema,
   GetOfferResponseSchema,
   CreateOfferSchema,
+  quantityValidationMessages,
+  isMultipleOfStep,
+  getOfferQuantityRelationErrors,
 } from './offers.schema.js'
-export type { Offer, GetOffersResponse, GetOfferParams, GetOfferResponse, CreateOffer } from './offers.schema.js'
+export type {
+  Offer,
+  GetOffersResponse,
+  GetOfferParams,
+  GetOfferResponse,
+  CreateOffer,
+  OfferQuantityRelationField,
+  OfferQuantityRelationErrors,
+} from './offers.schema.js'
 
 export { ReservationSchema, CreateReservationSchema } from './reservations.schema.js'
 export type { Reservation, CreateReservation } from './reservations.schema.js'

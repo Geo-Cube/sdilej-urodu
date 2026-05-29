@@ -5,6 +5,6 @@ export function useOffer(id: number) {
   return useQuery({
     queryKey: ['offers', id],
     queryFn: () => fetchOffer(id),
-    enabled: !isNaN(id),
+    enabled: Number.isFinite(id) && id > 0,
   })
 }

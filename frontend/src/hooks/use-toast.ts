@@ -32,7 +32,7 @@ function reducer(state: ToastState, action: Action): ToastState {
 }
 
 function toast({ title, description, variant = 'default' }: Omit<Toast, 'id'>) {
-  const id = String(Date.now())
+  const id = crypto.randomUUID()
   dispatch({ type: 'ADD', toast: { id, title, description, variant } })
   setTimeout(() => dispatch({ type: 'REMOVE', id }), 4000)
 }

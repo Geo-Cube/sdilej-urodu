@@ -1,5 +1,8 @@
 {
   "name": "@sdilej-urodu/monorepo",
   "private": true,
-  "workspaces": ["backend", "shared", "frontend"]
+  "workspaces": ["backend", "shared", "frontend"],
+  "scripts": {
+    "dev": "node scripts/dev.mjs"
+  }
 }

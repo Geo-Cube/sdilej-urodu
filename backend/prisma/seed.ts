@@ -6,6 +6,7 @@ async function main() {
 
   const rajcata = await prisma.offer.create({
     data: {
+      photoUrl: "https://cdn.metro-online.com/-/media/Project/MCW/CZ_Makro/images/inspirace/zelenina/2022/rajcata.jpg?h=440&iar=0&w=440&rev=25c15d4edc094237873374fb240b173d&hash=27046220598D769A445B1B8D37D24FF6",
       cropName: 'Rajčata',
       description: 'Čerstvá rajčata ze zahrádky, odrůda San Marzano. Sklizeno včera.',
       availableQuantity: 15,
@@ -27,6 +28,7 @@ async function main() {
 
   const cukety = await prisma.offer.create({
     data: {
+      photoUrl: 'https://cdn.administrace.tv/2023/06/27/hd/b1cf8ebb2b4b5a6baac5afdc50be9899.jpg',
       cropName: 'Cukety',
       description: 'Přerostlé cukety — skvělé na plnění nebo do polévky.',
       availableQuantity: 20,
@@ -48,6 +50,7 @@ async function main() {
 
   const jablka = await prisma.offer.create({
     data: {
+      photoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjja_j7NVa8BJxf8WppX78AcHT8f6Yv8ETdQ&s',
       cropName: 'Jablka Boskoopská',
       description: 'Klasická podzimní odrůda, ideální na jablečník i přímou konzumaci.',
       availableQuantity: 50,

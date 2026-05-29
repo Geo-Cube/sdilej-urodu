@@ -34,3 +34,25 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
+
+@keyframes reservation-success-popup {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% - 12px)) scale(0.92);
+  }
+
+  12%,
+  88% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% - 8px)) scale(0.96);
+  }
+}
+
+.reservation-success-popup {
+  animation: reservation-success-popup 3.2s ease-in-out forwards;
+}

@@ -4,7 +4,6 @@ node_modules/
 # Build output
 dist/
 
-
 # TypeScript
 *.tsbuildinfo
 
@@ -12,6 +11,14 @@ dist/
 logs/
 *.log
 npm-debug.log*
+
+# Local env
+.env
+.env.local
+.env.*.local
+
+# Generated browser check artifacts
+responsive-check/
 
 # OS
 .DS_Store

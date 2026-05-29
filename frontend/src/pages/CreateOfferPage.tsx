@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { OfferForm } from '@/features/offers/OfferForm'
 import { useCreateOffer } from '@/hooks/useCreateOffer'
 import { toast } from '@/hooks/use-toast'
+import { PageHeading } from '@/components/PageState'
 import type { CreateOffer } from '@sdilej-urodu/shared'
 
 export function CreateOfferPage() {
@@ -22,7 +23,7 @@ export function CreateOfferPage() {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <h1 className="text-2xl font-semibold text-gray-900 mb-6">Nová nabídka</h1>
+      <PageHeading>Nová nabídka</PageHeading>
       <OfferForm onSubmit={onSubmit} isPending={isPending} />
     </div>
   )
